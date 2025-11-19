@@ -24,9 +24,7 @@ from pathlib import Path
 
 
 
-# ============================================================
 # MODEL CONFIGURATION
-# ============================================================
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 NUM_CLASSES = 183
@@ -140,9 +138,7 @@ def infer(model, img: Image.Image):
     return pred
 
 
-# ============================================================
-# CUSTOM WIDGETS
-# ============================================================
+# GUI COMPONENTS
 
 class DropZone(QLabel):
     def __init__(self, title, parent=None, allow_interaction=True):
@@ -170,8 +166,7 @@ class DropZone(QLabel):
             self.setText(f"""
                 <div style='text-align: center; padding: 40px;'>
                     <p style='font-size: 48px; margin: 0;'>📤</p>
-                    <p style='font-size: 16px; font-weight: bold; margin: 10px 0;'>Drop your image here</p>
-                    <p style='font-size: 12px; color: #999; margin: 5px 0;'>or click to browse from your computer</p>
+                    <p style='font-size: 16px; font-weight: bold; margin: 10px 0;'>Click to browse from your computer</p>
                     <p style='font-size: 11px; color: #bbb; margin: 20px 0 0 0;'>Supported formats: PNG, JPG, WebP</p>
                 </div>
             """)
@@ -272,9 +267,7 @@ class LegendItem(QFrame):
         """)
 
 
-# ============================================================
 # MAIN APPLICATION
-# ============================================================
 
 class SegApp(QWidget):
     def __init__(self):
@@ -620,9 +613,7 @@ class SegApp(QWidget):
 
 
 
-# ============================================================
 # RUN APPLICATION
-# ============================================================
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
