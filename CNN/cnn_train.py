@@ -23,8 +23,9 @@ CHECKPOINT_INTERVAL = 300
 # Dataset
 class COCO10kDataset(Dataset):
     def __init__(self, img_dir, ann_dir, transform=None, target_transform=None):
-        self.img_dir = Path(img_dir)
-        self.ann_dir = Path(ann_dir)
+        BASE_DIR = Path(__file__).resolve().parent
+        self.img_dir = BASE_DIR / ".." / img_dir
+        self.ann_dir = BASE_DIR / ".." / ann_dir
         self.transform = transform
         self.target_transform = target_transform
 
@@ -137,9 +138,7 @@ def train(img_dir, ann_dir):
             current_loss = loss.item()
             loop.set_postfix(loss=current_loss)
 
-            # =====================================================
             # CHECKPOINT SETIAP 300 BATCH
-            # =====================================================
             if global_batch % CHECKPOINT_INTERVAL == 0:
                 ckpt_path = f"check_{epoch + 1}_{global_batch}_{current_loss:.4f}.pth"
 
@@ -153,9 +152,7 @@ def train(img_dir, ann_dir):
 
                 print(f"\n>>> CHECKPOINT DISIMPAN: {ckpt_path}\n")
 
-            # =====================================================
             # BEST DI 50 BATCH TERAKHIR EPOCH 3
-            # =====================================================
             is_last_epoch = (epoch == EPOCHS - 1)
             is_last_50_batches = (batch_idx > total_batches - 50)
 
@@ -172,16 +169,14 @@ def train(img_dir, ann_dir):
                         "loss": current_loss
                     }
                     
-                    print(f"\n🏆 NEW BEST in Last 50 Batches: Loss={current_loss:.4f} at batch {batch_idx}/{total_batches}\n")
+                    print(f"\n NEW BEST in Last 50 Batches: Loss={current_loss:.4f} at batch {batch_idx}/{total_batches}\n")
 
 
-    # =====================================================
     # SIMPAN MODEL TERBAIK DI 50 BATCH TERAKHIR
-    # =====================================================
     if best_checkpoint_last50 is not None:
         best_path = f"best_last50_batch{best_checkpoint_last50['batch']}_loss{best_loss_last50:.4f}.pth"
         torch.save(best_checkpoint_last50, best_path)
-        print(f"\n🎯 BEST MODEL (Last 50 Batches) DISIMPAN: {best_path}")
+        print(f"\n BEST MODEL (Last 50 Batches) DISIMPAN: {best_path}")
         print(f"   Loss: {best_loss_last50:.4f}")
         print(f"   Batch in Epoch 3: {best_checkpoint_last50['batch_in_epoch']}/{total_batches}\n")
 
@@ -190,11 +185,9 @@ def train(img_dir, ann_dir):
     print("Model final disimpan sebagai deeplab_resnet50_coco10k_final_3epoch.pth")
 
 
-# ==========================================
 # MAIN
-# ==========================================
 if __name__ == "__main__":
     train(
-        img_dir="PCD3/images",
-        ann_dir="PCD3/annotations"
+        img_dir="images",
+        ann_dir="annotations"
     )
